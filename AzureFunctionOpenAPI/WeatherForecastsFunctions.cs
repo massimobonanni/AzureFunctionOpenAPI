@@ -22,6 +22,11 @@ namespace AzureFunctionOpenAPI
             Summary = "Returns the weather forecasts of cities",
             Description = "Returns the weather forecast for the next 5 days for cities that have the filter parameter in their name. If the filter is not set, it returns the weather forecast for all cities.",
             Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiParameter("cityName",
+            Summary = "Possible filter for the name of the city",
+            Description = "If this parameter is used, the weather forecast for cities that have the parameter content in the name will be returned",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Query,
+            Visibility = OpenApiVisibilityType.Important)]
 
         [FunctionName(nameof(GetCityForecasts))]
         public IActionResult GetCityForecasts(
@@ -41,6 +46,12 @@ namespace AzureFunctionOpenAPI
             new[] { "WeatherForecast" },
             Summary = "Returns the weather forecasts for a specific city",
             Description = "Returns the weather forecast for the next 10 days for a specific city identified by its name.",
+            Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiParameter("cityName",
+            Summary = "Name of the city",
+            Description = "Name of the city for which you want the weather forecast",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Path,
+            Required = true,
             Visibility = OpenApiVisibilityType.Important)]
 
         [FunctionName(nameof(GetCityForecast))]
@@ -68,6 +79,16 @@ namespace AzureFunctionOpenAPI
             Summary = "Create a new alert for a specific city",
             Description = "Create a weather forecast alert for a specific city. The alert has a specific duration and a temperature throshold. The alert will be fire when the city temperature will greater than the threshold.",
             Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiParameter("cityName",
+            Summary = "Name of the city",
+            Description = "Name of the city for which you want to create an alert",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Path,
+            Required = true,
+            Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiRequestBody("application/json",
+            typeof(CreateCityForecastAlertRequest),
+            Description = "Properties of the alert to be created",
+            Required = true)]
 
         [FunctionName(nameof(CreateCityForecastAlert))]
         public async Task<IActionResult> CreateCityForecastAlert(
