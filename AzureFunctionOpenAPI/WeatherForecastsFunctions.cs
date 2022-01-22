@@ -12,6 +12,7 @@ using AzureFunctionOpenAPI.Utilities;
 using System.Linq;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
+using AzureFunctionOpenAPI.OpenApi.Examples;
 
 namespace AzureFunctionOpenAPI
 {
@@ -27,6 +28,12 @@ namespace AzureFunctionOpenAPI
             Description = "If this parameter is used, the weather forecast for cities that have the parameter content in the name will be returned",
             In = Microsoft.OpenApi.Models.ParameterLocation.Query,
             Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiResponseWithBody(System.Net.HttpStatusCode.OK,
+            "application/json",
+            typeof(GetCityForecastsResponse),
+            Summary = "List of weather forecasts for requested cities",
+            Description = "List of cities resulting from the search and, for each city, the forecasts for the next 5 days",
+            Example = typeof(GetCityForecastsResponseExample))]
 
         [FunctionName(nameof(GetCityForecasts))]
         public IActionResult GetCityForecasts(
@@ -53,6 +60,15 @@ namespace AzureFunctionOpenAPI
             In = Microsoft.OpenApi.Models.ParameterLocation.Path,
             Required = true,
             Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiResponseWithBody(System.Net.HttpStatusCode.OK,
+            "application/json",
+            typeof(GetCityForecastResponse),
+            Summary = "The weather forecast for the requested city",
+            Description = "The weather forecasts for the next 10 days related to the city you request",
+            Example = typeof(GetCityForecastResponseExample))]
+        [OpenApiResponseWithoutBody(System.Net.HttpStatusCode.NotFound,
+            Summary = "City not found",
+            Description = "Returns this message if you are searching for a city that doesn't exist")]
 
         [FunctionName(nameof(GetCityForecast))]
         public IActionResult GetCityForecast(
@@ -88,7 +104,17 @@ namespace AzureFunctionOpenAPI
         [OpenApiRequestBody("application/json",
             typeof(CreateCityForecastAlertRequest),
             Description = "Properties of the alert to be created",
-            Required = true)]
+            Required = true,
+            Example = typeof(CreateCityForecastAlertRequestExample))]
+        [OpenApiResponseWithBody(System.Net.HttpStatusCode.OK,
+            "application/json",
+            typeof(CreateCityForecastAlertResponse),
+            Summary = "The alert id",
+            Description = "The alert created. Contains the alertId and the name of the city",
+            Example = typeof(CreateCityForecastAlertResponseExample))]
+        [OpenApiResponseWithoutBody(System.Net.HttpStatusCode.NotFound,
+            Summary = "City not found or request not valid",
+            Description = "Returns this message if you try to create an alert for a city that doesn't exist or the request payload is not valid")]
 
         [FunctionName(nameof(CreateCityForecastAlert))]
         public async Task<IActionResult> CreateCityForecastAlert(
