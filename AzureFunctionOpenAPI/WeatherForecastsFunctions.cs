@@ -10,11 +10,19 @@ using Newtonsoft.Json;
 using AzureFunctionOpenAPI.Models;
 using AzureFunctionOpenAPI.Utilities;
 using System.Linq;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 
 namespace AzureFunctionOpenAPI
 {
     public class WeatherForecastsFunctions
     {
+        [OpenApiOperation("getcityforecasts",
+            new[] { "WeatherForecast" },
+            Summary = "Returns the weather forecasts of cities",
+            Description = "Returns the weather forecast for the next 5 days for cities that have the filter parameter in their name. If the filter is not set, it returns the weather forecast for all cities.",
+            Visibility = OpenApiVisibilityType.Important)]
+
         [FunctionName(nameof(GetCityForecasts))]
         public IActionResult GetCityForecasts(
            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "weatherforecasts")] HttpRequest req,
@@ -27,6 +35,13 @@ namespace AzureFunctionOpenAPI
 
             return new OkObjectResult(response);
         }
+
+
+        [OpenApiOperation("getcityforecast",
+            new[] { "WeatherForecast" },
+            Summary = "Returns the weather forecasts for a specific city",
+            Description = "Returns the weather forecast for the next 10 days for a specific city identified by its name.",
+            Visibility = OpenApiVisibilityType.Important)]
 
         [FunctionName(nameof(GetCityForecast))]
         public IActionResult GetCityForecast(
@@ -46,6 +61,13 @@ namespace AzureFunctionOpenAPI
 
             return new OkObjectResult(response);
         }
+
+
+        [OpenApiOperation("createcityforecastalert",
+            new[] { "WeatherAlert" },
+            Summary = "Create a new alert for a specific city",
+            Description = "Create a weather forecast alert for a specific city. The alert has a specific duration and a temperature throshold. The alert will be fire when the city temperature will greater than the threshold.",
+            Visibility = OpenApiVisibilityType.Important)]
 
         [FunctionName(nameof(CreateCityForecastAlert))]
         public async Task<IActionResult> CreateCityForecastAlert(
