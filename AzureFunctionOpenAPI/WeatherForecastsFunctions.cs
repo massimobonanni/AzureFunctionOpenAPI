@@ -13,11 +13,13 @@ using System.Linq;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using AzureFunctionOpenAPI.OpenApi.Examples;
+using Microsoft.OpenApi.Models;
 
 namespace AzureFunctionOpenAPI
 {
     public class WeatherForecastsFunctions
     {
+        #region [OpenAPI specification for GetCityForecasts]
         [OpenApiOperation("getcityforecasts",
             new[] { "WeatherForecast" },
             Summary = "Returns the weather forecasts of cities",
@@ -34,6 +36,11 @@ namespace AzureFunctionOpenAPI
             Summary = "List of weather forecasts for requested cities",
             Description = "List of cities resulting from the search and, for each city, the forecasts for the next 5 days",
             Example = typeof(GetCityForecastsResponseExample))]
+        [OpenApiSecurity("apikeyquery_auth",
+            SecuritySchemeType.ApiKey,
+            In = OpenApiSecurityLocationType.Query,
+            Name = "code")]
+        #endregion [OpenAPI specification for GetCityForecasts]
 
         [FunctionName(nameof(GetCityForecasts))]
         public IActionResult GetCityForecasts(
@@ -48,7 +55,7 @@ namespace AzureFunctionOpenAPI
             return new OkObjectResult(response);
         }
 
-
+        #region [OpenAPI specification for GetCityForecast]
         [OpenApiOperation("getcityforecast",
             new[] { "WeatherForecast" },
             Summary = "Returns the weather forecasts for a specific city",
@@ -69,6 +76,11 @@ namespace AzureFunctionOpenAPI
         [OpenApiResponseWithoutBody(System.Net.HttpStatusCode.NotFound,
             Summary = "City not found",
             Description = "Returns this message if you are searching for a city that doesn't exist")]
+        [OpenApiSecurity("apikeyheader_auth",
+            SecuritySchemeType.ApiKey,
+            In = OpenApiSecurityLocationType.Header,
+            Name = "x-functions-key")]
+        #endregion [OpenAPI specification for GetCityForecast]
 
         [FunctionName(nameof(GetCityForecast))]
         public IActionResult GetCityForecast(
@@ -89,7 +101,7 @@ namespace AzureFunctionOpenAPI
             return new OkObjectResult(response);
         }
 
-
+        #region [OpenAPI specification for CreateCityForecastAlert]
         [OpenApiOperation("createcityforecastalert",
             new[] { "WeatherAlert" },
             Summary = "Create a new alert for a specific city",
@@ -115,6 +127,7 @@ namespace AzureFunctionOpenAPI
         [OpenApiResponseWithoutBody(System.Net.HttpStatusCode.NotFound,
             Summary = "City not found or request not valid",
             Description = "Returns this message if you try to create an alert for a city that doesn't exist or the request payload is not valid")]
+        #endregion [OpenAPI specification for CreateCityForecastAlert]
 
         [FunctionName(nameof(CreateCityForecastAlert))]
         public async Task<IActionResult> CreateCityForecastAlert(
