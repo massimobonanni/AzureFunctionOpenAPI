@@ -15,7 +15,7 @@ namespace AzureFunctionOpenAPI.OpenApi
         {
             Version = "1.0.0",
             Title = "Awesome Weather REST API",
-            Description = "Awesome Weather provides the best API to get updated and accurate weather forecasts. the",
+            Description = "Awesome Weather provides the best API to get updated and accurate weather forecasts.",
             TermsOfService = new Uri("https://github.com/massimobonanni/AzureFunctionOpenAPI"),
             Contact = new OpenApiContact()
             {
